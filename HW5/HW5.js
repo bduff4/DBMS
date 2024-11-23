@@ -57,3 +57,26 @@ db.unemployment.aggregate([
     $sort: {"_id.Year": 1, "_id.State": 1} // Sort by Year and State for clarity
   }
 ])
+
+// 10. For each state, calculate the total unemployment rate across all counties (sum of all county rates).
+db.unemployment.aggregate([
+  {
+    $group: {
+      _id: "$State", // Group by State
+      totalRate: {$sum: "$Rate"} // Calculate the sum of Rate for each state
+    }
+  }
+])
+
+// 11. The same as Query 10 but for states with data from 2015 onward.
+db.unemployment.aggregate([
+  {
+    $match: {Year: {$gte: 2015}} // Filter for records with Year >= 2015
+  },
+  {
+    $group: {
+      _id: "$State", // Group by State
+      totalRate: {$sum: "$Rate"} // Calculate the sum of Rate for each state
+    }
+  }
+])
