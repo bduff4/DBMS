@@ -7,7 +7,7 @@ db.unemployment.distinct("State").length
 // 3. What does this query compute? Answer: 657
 db.unemployment.find({Rate : {$lt: 1.0}}).count()
 
-// 4. Find all counties with unemployment rate higher than 10%
+// 4. Find all counties with unemployment rate higher than 10%.
 db.unemployment.find(
   {Rate: {$gt: 10.0}}, // Filters for records with Rate > 10.0
   {County: 1, State: 1, Rate: 1, _id: 0} // Projects only County, State, and Rate fields
