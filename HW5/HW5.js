@@ -28,3 +28,32 @@ db.unemployment.find(
   {Rate: {$gte: 5.0, $lte: 8.0}}, // Filters for rates in the range [5.0, 8.0]
   {County: 1, State: 1, Rate: 1, _id: 0} // Projects County, State, and Rate fields
 )
+
+// 7. Find the state with the highest unemployment rate. Hint. Use { $limit: 1 }
+db.unemployment.aggregate([
+  {
+    $sort: {Rate: -1} // Sort records in descending order of Rate
+  },
+  {
+    $limit: 1 // Limit the results to the top record
+  },
+  {
+    $project: {State: 1, Rate: 1, _id: 0} // Display only State and Rate fields
+  }
+])
+
+// 8. Count how many counties have an unemployment rate above 5%.
+db.unemployment.find({Rate: {$gt: 5.0}}).count()
+
+// 9. Calculate the average unemployment rate per state by year.
+db.unemployment.aggregate([
+  {
+    $group: {
+      _id: {State: "$State", Year: "$Year"}, // Group by State and Year
+      averageRate: {$avg: "$Rate"} // Calculate the average of the Rate field
+    }
+  },
+  {
+    $sort: {"_id.Year": 1, "_id.State": 1} // Sort by Year and State for clarity
+  }
+])
